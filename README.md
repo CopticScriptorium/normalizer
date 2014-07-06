@@ -1,0 +1,1 @@
+Normalizes orthography and removes diacritics from UTF-8 Coptic.
