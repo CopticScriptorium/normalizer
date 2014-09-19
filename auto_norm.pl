@@ -5,6 +5,44 @@ binmode(STDOUT, ":utf8");
 binmode(STDIN, ":utf8");
 use Encode;
 
+my $usage;
+{
+$usage = <<"_USAGE_";
+This script normalizes Sahidic Coptic text to standard spelling.
+
+Usage:  auto_norm.pl [options] <FILE>
+
+Options and argument:
+
+-h              print this [h]elp message and quit
+-s              use [s]ahidica Bible specific normalization rules
+
+<FILE>    A text file encoded in UTF-8 without BOM
+
+
+Examples:
+
+Normalize a Coptic plain text file in UTF-8 encoding (without BOM):
+  auto_norm.pl in_Coptic_utf8.txt > out_Coptic_normalized.txt
+
+Copyright 2013-2014, Amir Zeldes & Caroline T. Schroeder
+
+This program is free software. You may copy or redistribute it under
+the same terms as Perl itself.
+_USAGE_
+}
+
+### OPTIONS BEGIN ###
+%opts = ();
+getopts('hs',\%opts) or die $usage;
+#help
+if ($opts{h} || (@ARGV == 0)) {
+    print $usage;
+    exit;
+}
+if ($opts{s})   {$sahidica = 1;} else {$sahidica = 0;}
+
+
 open FILE,"<:encoding(UTF-8)",shift or die "could not find input document";
 
 while (<FILE>) {
@@ -67,6 +105,13 @@ $line =~ s/(^|_)ϩⲃⲏⲟⲩⲉ(\$|_)/$1ϩⲃⲏⲩⲉ$2/g;
 $line =~ s/(^|_)ⲓⲉⲣⲟⲥⲟⲗⲩⲙⲁ(\$|_)/$1ϩⲓⲉⲣⲟⲩⲥⲁⲗⲏⲙ$2/g;
 $line =~ s/(^|_)ⲡⲓⲑⲉ(\$|_)/$1ⲡⲉⲓⲑⲉ$2/g;
 $line =~ s/(^|_)ⲡⲣⲟⲥⲕⲁⲣⲧⲉⲣⲓ(\$|_)/$1ⲡⲣⲟⲥⲕⲁⲣⲧⲉⲣⲓⲁ$2/g;
+
+#Sahidica specific replacements
+if ($sahidica == 1)
+{
+$line =~ s/ⲟⲉⲓ(\$|_)/ⲉⲓ/g;
+$line =~ s/^([ⲡⲧⲛ])ⲉⲉⲓ/$1ⲉⲓ/g;
+}
 
 #$line =~ s/_/ /g;
 
