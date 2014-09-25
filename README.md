@@ -7,8 +7,7 @@ v. 2.0 contains a parameter for normalizing the orthography in the Sahidica onli
 Usage:  auto_norm.pl [options] <FILE>
 
 Options and argument:
-
--h              print this [h]elp message and quit
+-h              print [h]elp message and quit
 -s              use [s]ahidica Bible specific normalization rules
 
 <FILE>    A text file encoded in UTF-8 without BOM
