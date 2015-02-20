@@ -53,7 +53,21 @@ while (<FILE>) {
 
  $line =~ s/[\|\[\]]//g; 
 $line =~ s/⳯/ⲛ/g;
-$line =~ s/[`̂︦︥̄⳿̣̣̇̈̇̄̈︤᷍]//g;
+$line =~ s/[`]//g;
+$line =~ s/[̂]//g;
+$line =~ s/[︦]//g;
+$line =~ s/[︥]//g;
+$line =~ s/[̄]//g;
+$line =~ s/[⳿]//g;
+$line =~ s/[̣]//g;
+$line =~ s/[̇]//g;
+$line =~ s/[̈]//g;
+$line =~ s/[̇]//g;
+$line =~ s/[̄]//g;
+$line =~ s/[̈]//g;
+$line =~ s/[̣]//g;
+$line =~ s/[᷍]//g;
+$line =~ s/[︤]//g;
 $line =~ s/Ⲁ/ⲁ/g;
 $line =~ s/Ⲃ/ⲃ/g;
 $line =~ s/Ⲅ/ⲅ/g;
