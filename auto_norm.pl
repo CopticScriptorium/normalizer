@@ -1,6 +1,7 @@
 #!/usr/bin/perl -w
 
 use utf8;
+use Getopt::Std;
 binmode(STDOUT, ":utf8");
 binmode(STDIN, ":utf8");
 use Encode;
@@ -8,6 +9,7 @@ use Encode;
 my $usage;
 {
 $usage = <<"_USAGE_";
+auto_norm V1.0.1
 This script normalizes Sahidic Coptic text to standard spelling.
 
 Usage:  auto_norm.pl [options] <FILE>
@@ -25,7 +27,7 @@ Examples:
 Normalize a Coptic plain text file in UTF-8 encoding (without BOM):
   auto_norm.pl in_Coptic_utf8.txt > out_Coptic_normalized.txt
 
-Copyright 2013-2014, Amir Zeldes & Caroline T. Schroeder
+Copyright 2013-2015, Amir Zeldes & Caroline T. Schroeder
 
 This program is free software. You may copy or redistribute it under
 the same terms as Perl itself.
@@ -89,27 +91,29 @@ $line =~ s/᷍//g;
 $line =~ s/̣//g;
 
 
-$line =~ s/(^|_)ⲓⲏⲗ(\$|_)/$1ⲓⲥⲣⲁⲏⲗ$2/g;
-$line =~ s/(^|_)ⲓⲏ?ⲥ(\$|_)/$1ⲓⲏⲥⲟⲩⲥ$2/g;
-$line =~ s/(^|_)ϫⲟⲓⲥ(\$|_)/$1ϫⲟⲉⲓⲥ$2/g;
-$line =~ s/(^|_)ⲭⲣ?ⲥ(\$|_)/$1ⲭⲣⲓⲥⲧⲟⲥ$2/g;
-$line =~ s/(^|_)ⲡⲛⲁ(\$|_)/$1ⲡⲛⲉⲩⲙⲁ$2/g;
-$line =~ s/(^|_)ϩⲓⲗⲏⲙ(\$|_)/$1ϩⲓⲉⲣⲟⲩⲥⲁⲗⲏⲙ$2/g;
-$line =~ s/(^|_)ⲥ[ⳁⲣ]ⲟⲥ(\$|_)/$1ⲥⲧⲁⲩⲣⲟⲥ$2/g;
-$line =~ s/(^|_)ⲕⲗⲏⲣⲟⲛⲟⲙⲓ(\$|_)/$1ⲕⲗⲏⲣⲟⲛⲟⲙⲉⲓ$2/g;
-$line =~ s/(^|_)ⲓⲱⲧ(\$|_)/$1ⲉⲓⲱⲧ$2/g;
-$line =~ s/(^|_)ⲓⲟⲧⲉ(\$|_)/$1ⲉⲓⲟⲧⲉ$2/g;
-$line =~ s/(^|_)ϩⲣⲁⲉⲓ(\$|_)/$1ϩⲣⲁⲓ$2/g;
-$line =~ s/(^|_)ⲡⲏⲟⲩⲉ(\$|_)/$1ⲡⲏⲩⲉ$2/g;
-$line =~ s/(^|_)ϩⲃⲏⲟⲩⲉ(\$|_)/$1ϩⲃⲏⲩⲉ$2/g;
-$line =~ s/(^|_)ⲓⲉⲣⲟⲥⲟⲗⲩⲙⲁ(\$|_)/$1ϩⲓⲉⲣⲟⲩⲥⲁⲗⲏⲙ$2/g;
-$line =~ s/(^|_)ⲡⲓⲑⲉ(\$|_)/$1ⲡⲉⲓⲑⲉ$2/g;
-$line =~ s/(^|_)ⲡⲣⲟⲥⲕⲁⲣⲧⲉⲣⲓ(\$|_)/$1ⲡⲣⲟⲥⲕⲁⲣⲧⲉⲣⲓⲁ$2/g;
+$line =~ s/(^|_)ⲓⲏⲗ($|_)/$1ⲓⲥⲣⲁⲏⲗ$2/g;
+$line =~ s/(^|_)ⲓⲏ?ⲥ($|_)/$1ⲓⲏⲥⲟⲩⲥ$2/g;
+$line =~ s/(^|_)ϫⲟⲓⲥ($|_)/$1ϫⲟⲉⲓⲥ$2/g;
+$line =~ s/(^|_)ⲭⲣ?ⲥ($|_)/$1ⲭⲣⲓⲥⲧⲟⲥ$2/g;
+$line =~ s/(^|_)ϯⲟⲩⲇⲁⲓⲁ($|_)/$1ⲧⲓⲟⲩⲇⲁⲓⲁ$2/g;
+$line =~ s/(^|_)ⲡⲛⲁ($|_)/$1ⲡⲛⲉⲩⲙⲁ$2/g;
+$line =~ s/(^|_)ϩⲓⲗⲏⲙ($|_)/$1ϩⲓⲉⲣⲟⲩⲥⲁⲗⲏⲙ$2/g;
+$line =~ s/(^|_)ⲥ[ⳁⲣ]ⲟⲥ($|_)/$1ⲥⲧⲁⲩⲣⲟⲥ$2/g;
+$line =~ s/(^|_)ⲕⲗⲏⲣⲟⲛⲟⲙⲓ($|_)/$1ⲕⲗⲏⲣⲟⲛⲟⲙⲉⲓ$2/g;
+$line =~ s/(^|_)ⲓⲱⲧ($|_)/$1ⲉⲓⲱⲧ$2/g;
+$line =~ s/(^|_)ⲓⲟⲧⲉ($|_)/$1ⲉⲓⲟⲧⲉ$2/g;
+$line =~ s/(^|_)ϩⲣⲁⲉⲓ($|_)/$1ϩⲣⲁⲓ$2/g;
+$line =~ s/(^|_)ⲡⲏⲟⲩⲉ($|_)/$1ⲡⲏⲩⲉ$2/g;
+$line =~ s/(^|_)ϩⲃⲏⲟⲩⲉ($|_)/$1ϩⲃⲏⲩⲉ$2/g;
+$line =~ s/(^|_)ⲓⲉⲣⲟⲥⲟⲗⲩⲙⲁ($|_)/$1ϩⲓⲉⲣⲟⲩⲥⲁⲗⲏⲙ$2/g;
+$line =~ s/(^|_)ⲡⲓⲑⲉ($|_)/$1ⲡⲉⲓⲑⲉ$2/g;
+$line =~ s/(^|_)ⲡⲣⲟⲥⲕⲁⲣⲧⲉⲣⲓ($|_)/$1ⲡⲣⲟⲥⲕⲁⲣⲧⲉⲣⲓⲁ$2/g;
+$line =~ s/(^|_)ⲙⲡⲁⲧⲉ[ⲕϥⲥⲛ]([^_ ]*)($|_)/$1ⲙⲡⲁⲧ$2$3/g;
 
 #Sahidica specific replacements
 if ($sahidica == 1)
 {
-$line =~ s/ⲟⲉⲓ(\$|_)/ⲉⲓ/g;
+$line =~ s/ⲟⲉⲓ($|_)/ⲉⲓ/g;
 $line =~ s/^([ⲡⲧⲛ])ⲉⲉⲓ/$1ⲉⲓ/g;
 }
 
